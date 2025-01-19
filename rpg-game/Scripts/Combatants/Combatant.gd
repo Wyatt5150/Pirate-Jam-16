@@ -4,29 +4,72 @@ class_name Combatant
 ### STAT DECLARATIONS ###
 var max_hp : int
 var max_wp : int
-var physical_attack : int
-var magic_attack : int
-var physical_defence : int
-var magical_defence : int
-var speed : int
+var physical_attack : int : 
+	get(): return ceili(physical_attack * physical_attack_status_modifier)
+var magical_attack : int :
+	get(): return ceili(magical_attack * magical_attack_status_modifier)
+var physical_defence : int :
+	get(): return ceili(physical_defence * physical_defence_status_modifier)
+var magical_defence : int :
+	get(): return ceili(magical_defence * magical_defence_status_modifier)
+var speed : int :
+	get(): return ceili(speed * speed_status_modifier)
 
 var hp : int
 var wp : int
 
 ### STATUS EFFECT DECLARATIONS ###
-enum StatusEffect {POISON, PARALYZE, BURN}
+enum StatusEffect {POISON, BURN, FREEZE, SLOW, HASTE}
 var status_immunities : Array[StatusEffect] = []
 var status_effects : Dictionary = {} # {StatusEffect : remaining_duration}
+var status_strength : float = 1.
+
+var physical_attack_status_modifier : float = 1.
+var magical_attack_status_modifier : float = 1.
+var physical_defence_status_modifier : float = 1.
+var magical_defence_status_modifier : float = 1.
+var speed_status_modifier : float = 1.
 
 # Triggers At Start Of Each Turn
-func _status_tick() -> void:
+func status_tick() -> void:
+	physical_attack_status_modifier = 1.
+	magical_attack_status_modifier = 1.
+	physical_defence_status_modifier = 1.
+	magical_defence_status_modifier = 1.
+	speed_status_modifier = 1.
+	
 	for effect in status_effects.keys():
-		pass
+		
+		_status_tick(effect)
+		if status_effects[effect] == -1:
+			pass
+		else:
+			status_effects[effect] -= 1
+			if status_effects[effect] < 1:
+				remove_status_effect(effect)
 
-func aohsiokdh(effect : StatusEffect) -> void:
-	pass
-
-func _apply_status_effect(status : StatusEffect, duration:int=3) -> bool:
+func apply_status_effect(status : StatusEffect, duration:int=3) -> bool:
 	if status in status_immunities: return false
 	
 	return false
+
+func remove_status_effect(status : StatusEffect) -> void:
+	status_effects.erase(status)
+
+func _status_tick(effect : StatusEffect) -> void:
+	match effect:
+		StatusEffect.POISON:
+			hp -= (max_hp * 0.10 * status_strength)
+		StatusEffect.BURN:
+			hp -= (max_hp * 0.10 * status_strength)
+		StatusEffect.FREEZE:
+			magical_attack_status_modifier *= 0.8
+			magical_defence_status_modifier *= 0.8
+			speed_status_modifier *= 0.8
+		StatusEffect.SLOW:
+			speed_status_modifier *= 0.5
+		StatusEffect.HASTE:
+			speed_status_modifier *= 1.5
+		_:
+			printerr("Status effect not registered.")
+			return
