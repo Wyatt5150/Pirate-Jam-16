@@ -1,9 +1,9 @@
 ea4bc82a6ad023ab7ee23ee620429895
-::res://::1737220140
+::res://::1737338685
 icon.svg::CompressedTexture2D::2578241881320003113::1737183799::1737183853::1::::<><>::
 ::res://Scenes/::1737183799
 battle_scene.tscn::PackedScene::7765620764831511339::1737183799::0::1::::<><>::res://Scripts/battle_manager.gd
 ::res://Scripts/::1737183799
 battle_manager.gd::GDScript::-1::1737183799::0::1::::BattleManager<>Control<>::
-::res://Scripts/Combatants/::1737183799
-Combatant.gd::GDScript::-1::1737183799::0::1::::Combatant<>Resource<>::
+::res://Scripts/Combatants/::1737263195
+Combatant.gd::GDScript::-1::1737263195::0::1::::Combatant<>Resource<>::

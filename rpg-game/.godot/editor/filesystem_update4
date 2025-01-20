@@ -1,1 +1,3 @@
 res://Scripts/Combatants/Combatant.gd
+res://Scenes/battle_scene.tscn
+res://Scenes/player_info_tag.tscn

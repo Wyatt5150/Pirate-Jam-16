@@ -15,8 +15,16 @@ var magical_defence : int :
 var speed : int :
 	get(): return ceili(speed * speed_status_modifier)
 
-var hp : int
+var hp : int : 
+	set(new_val):
+		if new_val < 1:
+			alive = false
+			hp = 0
+		
 var wp : int
+
+### FLAGS ###
+var alive : bool = true
 
 ### STATUS EFFECT DECLARATIONS ###
 enum StatusEffect {POISON, BURN, FREEZE, SLOW, HASTE}
@@ -29,6 +37,13 @@ var magical_attack_status_modifier : float = 1.
 var physical_defence_status_modifier : float = 1.
 var magical_defence_status_modifier : float = 1.
 var speed_status_modifier : float = 1.
+
+
+func damage(damage, physical : bool = true):
+	if physical:
+		hp -= damage * physical_defence
+	else:
+		hp -= damage * magical_defence
 
 # Triggers At Start Of Each Turn
 func status_tick() -> void:
@@ -56,6 +71,15 @@ func apply_status_effect(status : StatusEffect, duration:int=3) -> bool:
 func remove_status_effect(status : StatusEffect) -> void:
 	status_effects.erase(status)
 
+func clear_status_effects() -> void:
+	"""
+	Clears all non-infinite duration (-1) status effects.
+	"""
+	for effect in status_effects.keys():
+		if status_effects[effect] > 0:
+			remove_status_effect(effect)
+
+#TODO: Move each status into it's own function, probably post jam.
 func _status_tick(effect : StatusEffect) -> void:
 	match effect:
 		StatusEffect.POISON:
